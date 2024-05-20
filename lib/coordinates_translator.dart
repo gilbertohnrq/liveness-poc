@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 
 class CoordinatesTranslator {
   final InputImageRotation rotation;
@@ -14,15 +14,15 @@ class CoordinatesTranslator {
     required this.absoluteImageSize,
   });
 
-  double translateX(double x) {
+  double translateX(int x) {
     switch (rotation) {
-      case InputImageRotation.Rotation_90deg:
+      case InputImageRotation.rotation90deg:
         return x *
             size.width /
             (Platform.isIOS
                 ? absoluteImageSize.width
                 : absoluteImageSize.height);
-      case InputImageRotation.Rotation_270deg:
+      case InputImageRotation.rotation270deg:
         return size.width -
             x *
                 size.width /
@@ -34,10 +34,10 @@ class CoordinatesTranslator {
     }
   }
 
-  double translateY(double y) {
+  double translateY(int y) {
     switch (rotation) {
-      case InputImageRotation.Rotation_90deg:
-      case InputImageRotation.Rotation_270deg:
+      case InputImageRotation.rotation90deg:
+      case InputImageRotation.rotation270deg:
         return y *
             size.height /
             (Platform.isIOS

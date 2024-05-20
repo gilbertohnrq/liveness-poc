@@ -2,7 +2,7 @@ import 'dart:math' as math;
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:liveness/coordinates_translator.dart';
 import 'package:liveness/math_helper.dart';
 
@@ -66,35 +66,35 @@ class LivenessPainter extends CustomPainter {
       return;
     }
 
-    var originalCenter = face!.getLandmark(FaceLandmarkType.noseBase)?.position;
-    var leftEar = face!.getLandmark(FaceLandmarkType.leftEar)?.position;
-    var rightEar = face!.getLandmark(FaceLandmarkType.rightEar)?.position;
+    var originalCenter = face!.landmarks[FaceLandmarkType.noseBase]?.position;
+    var leftEar = face!.landmarks[FaceLandmarkType.leftEar]?.position;
+    var rightEar = face!.landmarks[FaceLandmarkType.rightEar]?.position;
 
     if (originalCenter != null && leftEar != null && rightEar != null) {
-      originalCenter = Offset(
-        coordinatesTranslator!.translateX(originalCenter.dx),
-        coordinatesTranslator!.translateY(originalCenter.dy),
+      originalCenter = Point<int>(
+        coordinatesTranslator!.translateX(originalCenter.x).toInt(),
+        coordinatesTranslator!.translateY(originalCenter.y).toInt(),
       );
 
-      leftEar = Offset(
-        coordinatesTranslator!.translateX(leftEar.dx),
-        coordinatesTranslator!.translateY(leftEar.dy),
+      leftEar = Point(
+        coordinatesTranslator!.translateX(leftEar.x).toInt(),
+        coordinatesTranslator!.translateY(leftEar.y).toInt(),
       );
 
-      rightEar = Offset(
-        coordinatesTranslator!.translateX(rightEar.dx),
-        coordinatesTranslator!.translateY(rightEar.dy),
+      rightEar = Point(
+        coordinatesTranslator!.translateX(rightEar.x).toInt(),
+        coordinatesTranslator!.translateY(rightEar.y).toInt(),
       );
 
-      final originalTop = (leftEar.dy + rightEar.dy) / 2;
-      final centerToTop = originalCenter.dy - originalTop;
+      final originalTop = (leftEar.y + rightEar.y) / 2;
+      final centerToTop = originalCenter.y - originalTop;
 
-      final centerToLeft = originalCenter.dx - leftEar.dx;
-      final centerToRight = originalCenter.dx - rightEar.dx;
+      final centerToLeft = originalCenter.x - leftEar.x;
+      final centerToRight = originalCenter.x - rightEar.x;
       final totalHorizontal = centerToLeft + centerToRight;
 
       final horizontalValue =
-          useValue(value: totalHorizontal, min: -80, max: 80);
+          useValue(value: totalHorizontal.toDouble(), min: -80, max: 80);
       final horizontalInterpolatedBottom = MathHelper.remap(
         -horizontalValue,
         -80,
